@@ -1,0 +1,15 @@
+services:
+  db-auth:
+    image: mongo:latest
+    networks:
+      - network-auth
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: auth
+
+networks:
+    network-auth:
+        driver: bridge
