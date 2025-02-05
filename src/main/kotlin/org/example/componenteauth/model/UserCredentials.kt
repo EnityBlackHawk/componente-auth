@@ -8,5 +8,5 @@ data class UserCredentials(
     val uuid: String,
     val username: String,
     val password: String,
-    val roles: List<UserRole>
+    val role: UserRole
 )

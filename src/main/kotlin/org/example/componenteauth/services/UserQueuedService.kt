@@ -9,6 +9,7 @@ class UserQueuedService(private val userService: UserService) {
 
     @RabbitListener(queues = ["auth-user-create"])
     fun create(user: UserCredentials) {
+        print(user)
         userService.create(user)
     }
 

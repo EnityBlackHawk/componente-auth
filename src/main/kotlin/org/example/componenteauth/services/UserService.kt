@@ -16,7 +16,7 @@ class UserService(
             uuid = user.uuid,
             username = user.username,
             password = bCryptEncoder.encode(user.password),
-            roles = user.roles
+            role = user.role
         )
         return userRepository.save(newUser)
     }
