@@ -1,6 +1,7 @@
 package org.example.componenteauth.controller
 
 
+import org.example.componenteauth.dto.AuthenticationDto
 import org.example.componenteauth.dto.LoginRequest
 import org.example.componenteauth.dto.LoginResponse
 import org.example.componenteauth.services.UserService
@@ -10,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.oauth2.jwt.JwtClaimsSet
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
+import org.springframework.web.bind.annotation.GetMapping
 
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -43,7 +46,18 @@ class TokenController(
         val jwt = jwtEncoder.encode(JwtEncoderParameters.from(claims)).tokenValue
 
         return ResponseEntity.ok(LoginResponse(jwt, expiresIn))
+    }
 
+    @PostMapping("/authenticate")
+    fun authenticate(token : JwtAuthenticationToken ) : ResponseEntity<AuthenticationDto> {
+
+        val auth = AuthenticationDto(
+            uuid = token.name,
+            userType = token.tokenAttributes["scope"] as String,
+            isValid = true,
+        )
+
+        return ResponseEntity.ok(auth)
     }
 
 }

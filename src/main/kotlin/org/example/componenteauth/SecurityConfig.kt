@@ -6,6 +6,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet
 import com.nimbusds.jose.proc.SecurityContext
 import java.security.interfaces.RSAPublicKey
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.config.Customizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
@@ -23,13 +24,13 @@ import java.security.interfaces.RSAPrivateKey
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-class SecurityConfig(
+open class SecurityConfig(
     @Value("\${jwt.public.key}") val rsaPublicKey: RSAPublicKey,
     @Value("\${jwt.private.key}") val rsaPrivateKey: RSAPrivateKey
 ) {
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    open fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.authorizeHttpRequests { auth ->
             auth.requestMatchers("/product/getAll").permitAll()
                 .requestMatchers("/product/findMany").permitAll()
@@ -40,7 +41,7 @@ class SecurityConfig(
         http.csrf {
             it.disable()
         }
-
+        http.oauth2ResourceServer { it.jwt { jwtDecoder() } }
         http.headers { h ->
             h.frameOptions {
                 it.disable()
@@ -51,17 +52,17 @@ class SecurityConfig(
     }
 
     @Bean
-    fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
+    open fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
 
     @Bean
-    fun jwtDecoder(): JwtDecoder {
+    open fun jwtDecoder(): JwtDecoder {
         return NimbusJwtDecoder.withPublicKey(rsaPublicKey).build()
     }
 
     @Bean
-    fun jwtEncoder(): JwtEncoder {
+    open fun jwtEncoder(): JwtEncoder {
         val jwl = RSAKey.Builder(rsaPublicKey)
             .privateKey(rsaPrivateKey)
             .build()

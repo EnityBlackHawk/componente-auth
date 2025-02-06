@@ -6,8 +6,19 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 
 @SpringBootApplication
 @EnableFeignClients
-class ComponenteAuthApplication
+class ComponenteAuthApplication {
 
-fun main(args: Array<String>) {
-    runApplication<ComponenteAuthApplication>(*args)
+    companion object{
+        @JvmStatic
+        fun main(args: Array<String>) {
+            runApplication<ComponenteAuthApplication>(*args)
+        }
+    }
+
+
+
+
 }
+
+
+

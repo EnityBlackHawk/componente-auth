@@ -6,7 +6,7 @@ services:
     networks:
       - network-auth
     environment:
-        - MONGO_URL=db-auth:27017
+        - MONGODB_HOST=db-auth:27017
     depends_on:
       - db-auth
 
