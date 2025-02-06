@@ -8,6 +8,7 @@ import java.security.interfaces.RSAPublicKey
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity.http
@@ -21,19 +22,19 @@ import java.security.interfaces.RSAPrivateKey
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 class SecurityConfig(
     @Value("\${jwt.public.key}") val rsaPublicKey: RSAPublicKey,
     @Value("\${jwt.private.key}") val rsaPrivateKey: RSAPrivateKey
 ) {
-
-
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.authorizeHttpRequests { auth ->
             auth.requestMatchers("/product/getAll").permitAll()
                 .requestMatchers("/product/findMany").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/login").permitAll()
+                .anyRequest().permitAll()
         }
 
         http.csrf {

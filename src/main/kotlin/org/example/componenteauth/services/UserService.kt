@@ -14,15 +14,16 @@ class UserService(
     fun create(user : UserCredentials): UserCredentials {
         val newUser = UserCredentials(
             uuid = user.uuid,
-            username = user.username,
+            name = user.name,
             password = bCryptEncoder.encode(user.password),
-            role = user.role
+            email = user.email,
+            userType = user.userType
         )
         return userRepository.save(newUser)
     }
 
-    fun findByUsername(username: String): UserCredentials? {
-        return userRepository.findByUsername(username)
+    fun findByEmail(email: String): UserCredentials? {
+        return userRepository.findByEmail(email)
     }
 
 
