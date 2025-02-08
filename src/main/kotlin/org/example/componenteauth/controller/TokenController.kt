@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping
 
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 
@@ -49,7 +50,11 @@ class TokenController(
     }
 
     @PostMapping("/authenticate")
-    fun authenticate(token : JwtAuthenticationToken ) : ResponseEntity<AuthenticationDto> {
+    fun authenticate(token : JwtAuthenticationToken?, @RequestHeader headers : Map<String, String>) : ResponseEntity<AuthenticationDto> {
+
+        if(token == null) {
+            return ResponseEntity.status(401).build()
+        }
 
         val auth = AuthenticationDto(
             uuid = token.name,

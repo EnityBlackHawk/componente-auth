@@ -6,20 +6,21 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet
 import com.nimbusds.jose.proc.SecurityContext
 import java.security.interfaces.RSAPublicKey
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.config.Customizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.web.server.ServerHttpSecurity.http
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.JwtEncoder
+import org.springframework.security.oauth2.jwt.JwtTimestampValidator
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
 import org.springframework.security.web.SecurityFilterChain
 import java.security.interfaces.RSAPrivateKey
+import java.time.Duration
 
 @Configuration
 @EnableWebSecurity
@@ -58,7 +59,9 @@ open class SecurityConfig(
 
     @Bean
     open fun jwtDecoder(): JwtDecoder {
-        return NimbusJwtDecoder.withPublicKey(rsaPublicKey).build()
+        var dec = NimbusJwtDecoder.withPublicKey(rsaPublicKey).build()
+        //dec.setJwtValidator(DelegatingOAuth2TokenValidator(JwtTimestampValidator(Duration.ofSeconds(60))))
+        return dec;
     }
 
     @Bean
